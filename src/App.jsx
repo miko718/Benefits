@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, MapPin, QrCode, MessageCircle, Settings, Bell, User, Star, Phone, Instagram, Linkedin, X, ChevronLeft, Sparkles, TrendingUp, Clock, Share2, Bookmark, Filter, Search } from 'lucide-react';
+import { Heart, MapPin, QrCode, MessageCircle, Settings, Bell, User, Star, Phone, Instagram, Linkedin, X, ChevronLeft, Sparkles, TrendingUp, Clock, Share2, Bookmark, Filter, Search, LogOut, Globe, HelpCircle } from 'lucide-react';
 
 // Mock data for businesses with enhanced details
 const mockBusinesses = [
@@ -161,6 +161,9 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [scrollY, setScrollY] = useState(0);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [subscriptionType, setSubscriptionType] = useState('free'); // 'free' | 'gold'
+  const [locationEnabled, setLocationEnabled] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -896,6 +899,128 @@ const App = () => {
     );
   };
 
+  // Settings Screen
+  const SettingsScreen = () => (
+    <div className="min-h-screen bg-black text-white pb-24">
+      <div className="sticky top-0 z-10 bg-black/90 backdrop-blur-xl border-b border-white/5">
+        <div className="p-6 max-w-2xl mx-auto">
+          <h1 className="text-3xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">הגדרות</h1>
+          <p className="text-white/50 text-sm mt-1">נהל את החשבון וההעדפות שלך</p>
+        </div>
+      </div>
+
+      <div className="px-4 py-6 max-w-2xl mx-auto space-y-6">
+        {/* Profile */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl p-6 border border-white/5">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/30">
+              <User className="text-black" size={32} />
+            </div>
+            <div>
+              <div className="text-xl font-black">{userName}</div>
+              <div className="text-white/50 text-sm">עצמאי</div>
+              <div className="text-green-400 text-sm font-semibold mt-1">חשבון חינמי</div>
+            </div>
+          </div>
+          <button className="w-full mt-4 py-3 rounded-2xl border border-white/10 text-white/80 font-bold hover:bg-white/5 transition-all">
+            ערוך פרופיל
+          </button>
+        </div>
+
+        {/* Notifications */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl p-6 border border-white/5">
+          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+            <Bell size={20} className="text-green-400" />
+            התראות
+          </h2>
+          <div className="flex items-center justify-between py-3 border-b border-white/5">
+            <span className="text-white/90 font-medium">התראות push</span>
+            <button
+              onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+              className={`w-14 h-8 rounded-full transition-all ${notificationsEnabled ? 'bg-green-500' : 'bg-zinc-700'}`}
+            >
+              <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform ${notificationsEnabled ? 'translate-x-8' : 'translate-x-1'}`} />
+            </button>
+          </div>
+          <p className="text-white/50 text-xs mt-2">התראות על הטבות קרובות והטבת היום</p>
+        </div>
+
+        {/* Location */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl p-6 border border-white/5">
+          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+            <MapPin size={20} className="text-green-400" />
+            מיקום
+          </h2>
+          <div className="flex items-center justify-between py-3">
+            <span className="text-white/90 font-medium">שימוש במיקום</span>
+            <button
+              onClick={() => setLocationEnabled(!locationEnabled)}
+              className={`w-14 h-8 rounded-full transition-all ${locationEnabled ? 'bg-green-500' : 'bg-zinc-700'}`}
+            >
+              <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform ${locationEnabled ? 'translate-x-8' : 'translate-x-1'}`} />
+            </button>
+          </div>
+          <p className="text-white/50 text-xs mt-2">להצגת עסקים קרוב אליך</p>
+        </div>
+
+        {/* Subscription */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl p-6 border border-white/5">
+          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+            <Sparkles size={20} className="text-yellow-400" />
+            מנוי
+          </h2>
+          <div className="flex items-center justify-between py-3 mb-4">
+            <div>
+              <span className="font-bold text-white">{subscriptionType === 'gold' ? 'Gold' : 'חינם'}</span>
+              <span className="text-white/50 text-sm mr-2">({subscriptionType === 'gold' ? '₪49/חודש' : '3 הטבות ליום'})</span>
+            </div>
+            {subscriptionType === 'free' && (
+              <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold">שדרג</span>
+            )}
+          </div>
+          {subscriptionType === 'free' && (
+            <button className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/40 text-yellow-400 font-black hover:from-yellow-500/30 hover:to-amber-500/30 transition-all">
+              שדרג ל-Gold – גישה להטבות ללא הגבלה
+            </button>
+          )}
+        </div>
+
+        {/* Language & About */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl p-6 border border-white/5">
+          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+            <Globe size={20} className="text-green-400" />
+            כללי
+          </h2>
+          <button className="w-full flex items-center justify-between py-4 border-b border-white/5 text-right hover:bg-white/5 rounded-t-2xl transition-colors">
+            <ChevronLeft size={20} className="text-white/40" />
+            <span className="text-white/90 font-medium">שפה</span>
+            <span className="text-white/50 text-sm">עברית</span>
+          </button>
+          <button className="w-full flex items-center justify-between py-4 border-b border-white/5 text-right hover:bg-white/5 transition-colors">
+            <ChevronLeft size={20} className="text-white/40" />
+            <span className="text-white/90 font-medium">תנאי שימוש</span>
+          </button>
+          <button className="w-full flex items-center justify-between py-4 text-right hover:bg-white/5 rounded-b-2xl transition-colors">
+            <ChevronLeft size={20} className="text-white/40" />
+            <span className="text-white/90 font-medium flex items-center gap-2">
+              <HelpCircle size={18} />
+              עזרה ותמיכה
+            </span>
+          </button>
+        </div>
+
+        {/* Version */}
+        <div className="text-center text-white/40 text-sm py-4">גרסה 1.0.0</div>
+
+        {/* Logout */}
+        <button className="w-full py-4 rounded-2xl border-2 border-red-500/50 text-red-400 font-black hover:bg-red-500/10 transition-all flex items-center justify-center gap-2">
+          <LogOut size={20} />
+          התנתק
+        </button>
+      </div>
+    </div>
+  );
+
   const NavBar = () => {
     const navItems = [
       { id: 'home', icon: MapPin, label: 'בית', color: 'green' },
@@ -979,7 +1104,7 @@ const App = () => {
       {currentScreen === 'qr' && <QRScreen />}
       {currentScreen === 'map' && <PlaceholderScreen icon={MapPin} title="מפת העסקים" />}
       {currentScreen === 'messages' && <PlaceholderScreen icon={MessageCircle} title="הודעות" />}
-      {currentScreen === 'settings' && <PlaceholderScreen icon={Settings} title="הגדרות" />}
+      {currentScreen === 'settings' && <SettingsScreen />}
       <NavBar />
 
       <style>{`

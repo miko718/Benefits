@@ -14,6 +14,8 @@ npm-debug.log*
 .idea/
 .vscode/
 
-# Env
+# Env (keep .env.example)
 .env
 .env.*
+!.env.example
+!**/.env.example
